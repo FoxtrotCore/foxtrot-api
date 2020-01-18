@@ -24,6 +24,7 @@ def handle_search_request(ep_num=PathValue(),
 
 def handle_close():
     log(Mode.WARN, "Closing the server!")
+    # TODO: Save logs + other things
     sys.exit(0)
 
 def main():
