@@ -65,7 +65,7 @@ class Line:
          self.text = text
 
     def is_character(self, name): return (self.name.upper() == name.upper())
-    def has_text(self, text): return (self.text.find(text) != -1)
+    def has_text(self, text): return (self.text.upper().find(text.upper()) != -1)
 
     def __str__(self): return str("[" + str(self.start) + " - " + str(self.end) + "] <" + self.name + ">: " + self.text)
     def __str__(self): return str("[" + str(self.start) + " - " + str(self.end) + "] <" + self.name + ">: " + self.text)

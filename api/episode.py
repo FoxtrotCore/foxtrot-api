@@ -24,10 +24,12 @@ class Episode:
     def search(self, start = None, end = None, name = None, text = None):
         results = []
         for line in self.lines:
-            if(start != None and (line.start >= start)): results.append(line)
-            elif(end != None and (line.end <= end)): results.append(line)
-            elif(name != None and line.is_character(name)): results.append(line)
-            elif(text != None and line.has_text(text)): results.append(line)
+            if((start == None or (line.start >= start)) and
+               (end == None or (line.end <= end)) and
+               (name == None or line.is_character(name)) and
+               (text == None or line.has_text(text))):
+                results.append(line)
+                continue
         return results
 
     def __init__(self, file_path = None):
