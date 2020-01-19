@@ -2,6 +2,8 @@
 
 import simple_http_server.server as server, sys
 from ftfutils import log, Mode
+from episode import Episode
+from line import Time
 from simple_http_server import request_map, HttpError, StaticFile, PathValue, Parameter
 
 HOST = "localhost"
@@ -27,16 +29,20 @@ def root_handle(): return StaticFile('./index.html', 'utf-8'), {"code": 200, "me
 def handle_search_request(ep_num=PathValue(),
                           text=Parameter('text', default=''),
                           episode=Parameter('episode', default=''),
-                          character=Parameter('character', default='')):
+                          name=Parameter('name', default='')):
     res = validate_arg(ep_num) # Input validation
     if(res != None): return res
 
-    if(text == '' and episode == '' and character == ''): # Deal with an empty request
+    if(text == '' and episode == '' and name == ''): # Deal with an empty request
         log(Mode.WARN, 'Skipping an empty serach request!')
         return {"code": 406, "message": "cannot serve empty search request!"}
     else:
-        # TODO: Search transcripts
-        return {"code": 200, "message": { "text": text, "episode": episode, "character": character }}
+        path = BASE_URL + "eng_" + Time.pad(int(ep_num), precision=3) + "_Code_Lyoko.ass"
+        ep_data = Episode(path)
+        sres = ep_data.search(name="aelita")
+        res = {"code": 200, "message": { "path": path, "text": text, "episode": episode, "character": name, "search_results": []}}
+        for line in sres: res["message"]["search_results"].append(str(line))
+        return res
 
 @request_map("/script/{ep_num}", method="GET")
 def handle_transcript_request(ep_num=PathValue()):

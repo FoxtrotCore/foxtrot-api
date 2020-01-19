@@ -6,8 +6,6 @@ from line import Time
 
 BASE_URL = "../transcripts/"
 
-def is_dialogue(line): return (line.split(':')[0] == "Dialogue")
-
 def main():
     for i in range(0, 9):
         path = BASE_URL + "eng_00" + str(i) + "_Code_Lyoko.ass"

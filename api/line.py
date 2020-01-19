@@ -5,7 +5,7 @@ class Time:
         self.sec = sec
         self.mil = mil
 
-    def pad(self, arg, precision=2):
+    def pad(arg, precision=2):
         for i in range(1, precision):
             if(arg < 10**i):
                 pad = ""
@@ -50,7 +50,7 @@ class Time:
         return False
 
     def __eq__(self, src): return (self.hrs == src.hrs and self.min == src.min and self.sec == src.sec and self.mil == src.mil)
-    def __str__(self): return str(self.pad(self.hrs) + ":" + self.pad(self.min) + ":" + self.pad(self.sec) + "." + self.pad(self.mil, precision=3))
+    def __str__(self): return str(Time.pad(self.hrs) + ":" + Time.pad(self.min) + ":" + Time.pad(self.sec) + "." + Time.pad(self.mil, precision=3))
 
 class Line:
     def __init__(self,
