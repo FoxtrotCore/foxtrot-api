@@ -54,19 +54,18 @@ def root_handle(): return StaticFile('./index.html', 'utf-8'), {"code": 200, "me
 @request_map("/search/{ep_num}", method='GET')
 def handle_search_request(ep_num=PathValue(),
                           text=Parameter('text', default=''),
-                          episode=Parameter('episode', default=''),
                           name=Parameter('name', default='')):
     res = validate_arg(ep_num) # Input validation
     if(res != None): return res
 
-    if(text == '' and episode == '' and name == ''): # Deal with an empty request
+    if(text == '' and name == ''): # Deal with an empty request
         log(Mode.WARN, 'Skipping an empty serach request!')
         return {"code": 406, "message": "cannot serve empty search request!"}
     else:
         path = prepare_script("eng_" + Time.pad(int(ep_num), precision=3) + "_Code_Lyoko.ass")
         ep_data = Episode(path)
         sres = ep_data.search(name=name, text=text)
-        res = {"code": 200, "message": { "path": path, "text": text, "episode": episode, "character": name, "search_results": []}}
+        res = {"code": 200, "message": { "path": path, "text": text, "character": name, "search_results": []}}
         for line in sres: res["message"]["search_results"].append(str(line))
         return res
 

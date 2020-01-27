@@ -21,13 +21,13 @@ class Episode:
             return Line(start, end, name, text)
         else: return None
 
-    def search(self, start = None, end = None, name = None, text = None):
+    def search(self, start = '', end = '', name = '', text = ''):
         results = []
         for line in self.lines:
-            if((start == None or (line.start >= start)) and
-               (end == None or (line.end <= end)) and
-               (name == None or line.is_character(name)) and
-               (text == None or line.has_text(text))):
+            if((start == '' or (line.start >= start)) and
+               (end == '' or (line.end <= end)) and
+               (name == '' or line.is_character(name)) and
+               (text == '' or line.has_text(text))):
                 results.append(line)
                 continue
         return results
