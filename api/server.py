@@ -1,15 +1,41 @@
 #!/usr/bin/env python3
 
-import simple_http_server.server as server, sys
+import simple_http_server.server as server, os, sys, requests, shutil
+from pathlib import Path
 from ftfutils import log, Mode
+from ftfutils.utilities import *
 from episode import Episode
 from line import Time
 from simple_http_server import request_map, HttpError, StaticFile, PathValue, Parameter
 
-HOST = "localhost"
-PORT = 8080
+CONFIG = load_json('./config/config.json')
+log(Mode.INFO, "Loaded config: " + str(CONFIG))
 
-BASE_URL="../transcripts/"
+# Bind the correct host: port
+if(CONFIG['prod']):
+    HOST = CONFIG['host']
+    PORT = CONFIG['port']
+else:
+    HOST = CONFIG['dev_host']
+    PORT = CONFIG['dev_port']
+
+LOCAL_BASE="./cache/"
+REMOTE_BASE="https://raw.githubusercontent.com/FoxtrotCore/misc/master/subtitles/ass/"
+
+def prepare_script(file_path):
+    local = Path(LOCAL_BASE + file_path)
+    remote = REMOTE_BASE + file_path
+
+    if(not local.exists()):
+        log(Mode.DEBUG, "File not cached: " + str(local) + "\n\tMaking request to repo: " + str(remote))
+        raw_script = requests.get(remote).text
+        file = open(str(local), 'w+')
+        file.write(raw_script)
+        file.close()
+    else: log(Mode.INFO, "File cached: " + str(local))
+
+    return str(local)
+
 
 # If all is well, this returns None, else it returns a dictionary
 def validate_arg(arg):
@@ -37,9 +63,9 @@ def handle_search_request(ep_num=PathValue(),
         log(Mode.WARN, 'Skipping an empty serach request!')
         return {"code": 406, "message": "cannot serve empty search request!"}
     else:
-        path = BASE_URL + "eng_" + Time.pad(int(ep_num), precision=3) + "_Code_Lyoko.ass"
+        path = prepare_script("eng_" + Time.pad(int(ep_num), precision=3) + "_Code_Lyoko.ass")
         ep_data = Episode(path)
-        sres = ep_data.search(name="aelita")
+        sres = ep_data.search(name=name, text=text)
         res = {"code": 200, "message": { "path": path, "text": text, "episode": episode, "character": name, "search_results": []}}
         for line in sres: res["message"]["search_results"].append(str(line))
         return res
@@ -54,17 +80,19 @@ def handle_transcript_request(ep_num=PathValue()):
     elif(int(ep_num) < 100): ep_num = "0" + str(ep_num)
 
     # Construct file name
-    file_path = BASE_URL + "eng_" + ep_num + "_Code_Lyoko.ass"
+    file_path = prepare_script("eng_" + Time.pad(int(ep_num), precision=3) + "_Code_Lyoko.ass")
 
     # Return result
     return StaticFile(file_path, "UTF-8")
 
 def handle_close():
-    log(Mode.WARN, "Closing the server!")
-    # TODO: Save logs + other things
+    log(Mode.WARN, "Clearing the cache and closing the server!")
+    if(Path(LOCAL_BASE).exists()): shutil.rmtree(LOCAL_BASE)
     sys.exit(0)
 
 def main():
+    if(not Path(LOCAL_BASE).exists()): os.makedirs(LOCAL_BASE)
+
     try: server.start(host=HOST, port=PORT)
     except KeyboardInterrupt: handle_close()
     except HttpError: handle_http_error()
