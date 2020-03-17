@@ -1,0 +1,34 @@
+<h1>foxtrot-api</h1>
+<p>An API for searching FTF transcripts.</p>
+<h1>Endpoints:</h1>
+<h3>GET</h3>
+<hr>
+<p><code>/search</code>: <em>Search FTF transcripts.</em></p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>episode</code>: Integer [0 - 95] Episode to be searched.</li>
+<li><code>character</code>: String [Case insensitive] Filter by character.</li>
+<li><code>dialogue</code>: String [Case insensitive] Filter by dialogue.</li>
+</ul>
+<p><strong>All</strong> of these parameters are repeatable if more than one is desired.</p>
+<p><strong>Exs:</strong></p>
+<p><code>/search?episode=1&amp;episode=2</code>
+<code>/search?character=jim&amp;dialogue=rather not talk about it</code></p>
+<p><strong>Returns:</strong></p>
+<pre><code class="language-json">{
+  &quot;search_results&quot;: [],
+  &quot;missing_eps&quot;: [],
+  &quot;search_time&quot;: 0.0
+}
+</code></pre>
+<p><em>(Note: If no episodes are specified then all available episodes will be searched.)</em></p>
+<p><strong>(WARNING: This WILL slow down your search time.)</strong></p>
+<hr>
+<p><code>/available</code>: <em>Get a list of currently available transcripts.</em></p>
+<p><strong>Returns:</strong></p>
+<pre><code class="language-json">{
+  &quot;available_episodes&quot;: [],
+  &quot;search_time&quot;: 0.0
+}
+</code></pre>
+<hr>

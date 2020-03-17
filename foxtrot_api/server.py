@@ -7,10 +7,10 @@ from .line import Line
 import os, os.path, ssl, sys, json, time
 
 httpd = None
+config = None
+episode_table = {}
 home_dir = os.path.expanduser("~/.ftf-api/")
 cache_dir = home_dir + "cache/"
-config = load_json(home_dir + "config.json")
-episode_table = {}
 
 class Handler(BaseHTTPRequestHandler):
     def __init__(self, request, client_addr, server):
@@ -20,9 +20,12 @@ class Handler(BaseHTTPRequestHandler):
         local_script_path = cache_dir + filename
         remote_script_path = config['script_uri'] + filename
 
-        if(os.path.exists(local_script_path)): return local_script_path
+        if(os.path.exists(local_script_path)):
+            file = open(local_script_path, 'r+')
+            data = file.read()
+            file.close()
+            return data
         else:
-            log(Mode.DEBUG, "Script does not exist: " + local_script_path)
             con = HTTPSConnection(config['script_url'])
             con.request('GET', remote_script_path, {}, {})
             res = con.getresponse()
@@ -32,7 +35,7 @@ class Handler(BaseHTTPRequestHandler):
                 file = open(local_script_path, "w+")
                 file.write(data)
                 file.close()
-                return local_script_path
+                return data
             else: return None
 
     def cache_episodes(self, episodes):
@@ -43,10 +46,10 @@ class Handler(BaseHTTPRequestHandler):
         for e in stuff:
             if(episode_table.get(e) is None):
                 name = "eng_" + str(e).rjust(3, '0') + '_Code_Lyoko.ass'
-                log(Mode.WARN, "File not loaded: " + str(e))
-                ep_path = self.get_script(name)
-                if(ep_path is None): log(Mode.ERROR, "Failed to retrieve remote file: " + name)
-                else: episode_table[e] = Episode(ep_path)
+                log(Mode.WARN, "Episode #" + str(e) + " is not loaded in the episode table!")
+                ep_data = self.get_script(name)
+                if(ep_data is None): log(Mode.ERROR, "Failed to retrieve remote file: " + name)
+                else: episode_table[e] = Episode(e, ep_data)
 
     def sanitize_request(self, req):
         characters = []
@@ -68,8 +71,12 @@ class Handler(BaseHTTPRequestHandler):
 
         return characters, episodes, dialogues
 
-    def do_HEAD(self):
+    def do_JSON_HEAD(self):
         self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+
+    def do_HTML_HEAD(self):
+        self.send_header('Content-Type', 'text/html')
         self.end_headers()
 
     def do_GET(self):
@@ -77,61 +84,67 @@ class Handler(BaseHTTPRequestHandler):
         url_path = urlparse(self.path)
         query = parse_qs(url_path.query)
 
-        log(Mode.DEBUG, "A new request was received: " + str(url_path.path) + " | QArgs: " + str(query))
+        if(url_path.path == '/'):
+            file = open('index.html')
+            res = file.read()
+            file.close()
 
-        if(url_path.path == "/search"):
+            self.send_response(200)
+            self.do_HTML_HEAD()
+            self.wfile.write(bytearray(res, 'UTF-8'))
+        elif(url_path.path == "/search"):
             start = time.time()
-            code = 200
             characters, episodes, dialogues = self.sanitize_request(query)
-            log(Mode.DEBUG, "Characters: " + str(characters) + "\n\tEpisodes: " + str(episodes) + "\n\tDialogues: " + str(dialogues))
             self.cache_episodes(episodes)
 
-            log(Mode.DEBUG, "Master Table: " + str(episode_table))
-
             qres = []
-            res = []
+            res = {}
+            res['search_results'] = []
+            res['missing_eps'] = []
 
             for e in episodes:
-                log(Mode.INFO, "Searching ep" + str(e))
-                if(len(characters) > 0 and len(dialogues) > 0):
-                    for c in characters:
-                        for d in dialogues:
-                            if(episode_table.get(e) is None): log(Mode.ERROR, "Skipped " + str((str(e), c, d)) + " due to missing episode!")
-                            else: qres += episode_table[e].search(name=c, text=d)
-                elif(len(characters) > 0):
-                    for c in characters:
-                        if(episode_table.get(e) is None): log(Mode.ERROR, "Skipped " + str((str(e), c)) + " due to missing episode!")
-                        else: qres += episode_table[e].search(name=c)
-                elif(len(dialogues) > 0):
-                    for d in dialogues:
-                        if(episode_table.get(e) is None): log(Mode.ERROR, "Skipped " + str((str(e), d)) + " due to missing episode!")
-                        else: qres += episode_table[e].search(text=d)
+                if(episode_table.get(e) is None):
+                    log(Mode.ERROR, "Episode #" + str(e) + " is missing, skipping!")
+                    res['missing_eps'].append(e)
+                    continue
                 else:
-                    log(Mode.ERROR, "Not enough search terms!")
-                    break
+                    if(len(characters) > 0 and len(dialogues) > 0):
+                        for c in characters:
+                            for d in dialogues: qres += episode_table[e].search(name=c, text=d)
+                    elif(len(characters) > 0):
+                        for c in characters: qres += episode_table[e].search(name=c)
+                    elif(len(dialogues) > 0):
+                        for d in dialogues: qres += episode_table[e].search(text=d)
+                    else:
+                        log(Mode.ERROR, "Not enough search terms!")
+                        break
 
-            for line in qres: res.append(line.__repr__())
-            elapsed = round(time.time() - start, 4)
+            for line in qres: res['search_results'].append(line.to_dict())
+            elapsed = round(1 * (time.time() - start), 4)
+            res['search_time'] = elapsed
 
-            log(Mode.INFO, "Search results in " + str(elapsed) + "s: " + str(res))
+            log(Mode.INFO, "Search finished in " + str(elapsed) + "s: " + str(res))
 
-            start = time.time()
             self.send_response(200)
-            self.do_HEAD()
+            self.do_JSON_HEAD()
             self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
-            elapsed = round(time.time() - start, 4)
-            log(Mode.INFO, "Served in " + str(elapsed) + "s!")
         elif(url_path.path == "/available"):
+            start = time.time()
             self.cache_episodes(list(range(96)))
-            res = sorted(list(episode_table.keys()))
-            log(Mode.INFO, "Available episodes: " + str(res))
+            res = {}
+            res['available_episodes'] = sorted(list(episode_table.keys()))
+            elapsed = round(1 * (time.time() - start), 4)
+            res['search_time'] = elapsed
+
+            log(Mode.INFO, "Episode table populated in " + str(elapsed) + "s: " + str(res))
+
             self.send_response(200)
-            self.do_HEAD()
+            self.do_JSON_HEAD()
             self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
         else:
-            code = 400
+            code = 404
             self.send_response(code)
-            self.do_HEAD()
+            self.do_HTML_HEAD()
             self.wfile.write(bytearray(BaseHTTPRequestHandler.responses[code][1], 'utf-8'))
 
 def prime_file(filename):
@@ -148,12 +161,13 @@ def error(msg):
     sys.exit(-1)
 
 def start(host, port, key, cert):
-    global httpd
+    global httpd, config
 
     # Prime the prerequisite files on disk
     prime_file(key)
     prime_file(cert)
     prime_cache()
+    config = load_json(home_dir + "config.json")
 
     httpd = HTTPServer((host, port), Handler) # Create the HTTP server
     httpd.socket = ssl.wrap_socket(httpd.socket, # Wrap with SSL

@@ -52,11 +52,13 @@ class Time:
 
 class Line:
     def __init__(self,
+                 ep_num = -1,
                  start = Time(),
                  end = Time(),
                  name = "N/A",
                  text = "N/A"):
          # if(start > end): raise "Cannot start a line after it ends!"
+         self.ep_num = ep_num
          self.start = start
          self.end = end
          self.name = name
@@ -65,10 +67,12 @@ class Line:
     def is_character(self, name): return (self.name.upper() == name.upper())
     def has_text(self, text): return (self.text.lower().find(text.lower()) != -1)
 
-    def __repr__(self):
+    def to_dict(self):
         res = {}
-        res['start_time'] = str(self.start)
-        res['end_time'] = str(self.end)
+        res['episode_number'] = self.ep_num
+        res['timestamp'] = {}
+        res['timestamp']['in'] = str(self.start)
+        res['timestamp']['out'] = str(self.end)
         res['name'] = self.name
         res['dialogue'] = self.text
         return res
