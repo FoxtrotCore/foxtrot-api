@@ -16,7 +16,19 @@ An API for searching FTF transcripts.
 
 **All** of these parameters are repeatable if more than one is desired.
 
-**Ex:** `/search?episode=1&episode=2`
+**Exs:**
+
+  `/search?episode=1&episode=2`
+  `/search?character=jim&dialogue=rather not talk about it`
+
+**Returns:**
+```json
+{
+  "search_results": [],
+  "missing_eps": [],
+  "search_time": 0.0
+}
+```
 
 *(Note: If no episodes are specified then all available episodes will be searched.)*
 
@@ -25,5 +37,13 @@ An API for searching FTF transcripts.
 ***
 
 `/available`: _Get a list of currently available transcripts._
+
+**Returns:**
+```json
+{
+  "available_episodes": [],
+  "search_time": 0.0
+}
+```
 
 ***
