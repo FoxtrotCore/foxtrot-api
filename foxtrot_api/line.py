@@ -5,14 +5,6 @@ class Time:
         self.sec = sec
         self.mil = mil
 
-    def pad(arg, precision=2):
-        for i in range(1, precision):
-            if(arg < 10**i):
-                pad = ""
-                for j in range(0, (precision - i)): pad += "0"
-                return str(pad + str(arg))
-        return str(arg)
-
     def __lt__(self, src):
         if(self.hrs < src.hrs): return True
         elif(self.min < src.min): return True

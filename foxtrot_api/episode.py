@@ -1,4 +1,4 @@
-from line import *
+from .line import *
 
 class Episode:
     def is_dialogue(line): return (line.split(':')[0] == "Dialogue")

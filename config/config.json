@@ -1,9 +1,0 @@
-{
-  "prod": false,
-
-  "host": "api.foxtrotfanatics.com",
-  "dev_host": "localhost",
-
-  "port": 443,
-  "dev_port": 8080
-}
