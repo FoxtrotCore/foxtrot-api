@@ -69,14 +69,10 @@ class Handler(BaseHTTPRequestHandler):
         return characters, episodes, dialogues
 
     def do_HEAD(self):
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Save-Data', 'on')
-        self.send_header('Allow', 'GET')
+        self.send_header('Content-Type', 'application/json')
         self.end_headers()
 
     def do_GET(self):
-        self.do_HEAD()
-
         global episode_table
         url_path = urlparse(self.path)
         query = parse_qs(url_path.query)
@@ -97,31 +93,45 @@ class Handler(BaseHTTPRequestHandler):
 
             for e in episodes:
                 log(Mode.INFO, "Searching ep" + str(e))
-                if(len(characters) > 0): character = characters[0]
-                else: character = ''
-
-                if(len(dialogues) > 0): dialogue = dialogues[0]
-                else: dialogue = ''
-
-                if(character is None and dialogue is None):
-                    log(Mode.INFO, "Not enough search terms!")
+                if(len(characters) > 0 and len(dialogues) > 0):
+                    for c in characters:
+                        for d in dialogues:
+                            if(episode_table.get(e) is None): log(Mode.ERROR, "Skipped " + str((str(e), c, d)) + " due to missing episode!")
+                            else: qres += episode_table[e].search(name=c, text=d)
+                elif(len(characters) > 0):
+                    for c in characters:
+                        if(episode_table.get(e) is None): log(Mode.ERROR, "Skipped " + str((str(e), c)) + " due to missing episode!")
+                        else: qres += episode_table[e].search(name=c)
+                elif(len(dialogues) > 0):
+                    for d in dialogues:
+                        if(episode_table.get(e) is None): log(Mode.ERROR, "Skipped " + str((str(e), d)) + " due to missing episode!")
+                        else: qres += episode_table[e].search(text=d)
+                else:
+                    log(Mode.ERROR, "Not enough search terms!")
                     break
-                else: qres += episode_table[e].search(name=character, text=dialogue)
 
-            for line in qres: res.append(str(line))
+            for line in qres: res.append(line.__repr__())
             elapsed = round(time.time() - start, 4)
 
             log(Mode.INFO, "Search results in " + str(elapsed) + "s: " + str(res))
 
             start = time.time()
-            self.wfile.write(bytearray(json.dumps({'code': 200, 'message': json.dumps(res), 'received': 'ok'}), 'utf-8'))
-            self.end_headers()
+            self.send_response(200)
+            self.do_HEAD()
+            self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
             elapsed = round(time.time() - start, 4)
             log(Mode.INFO, "Served in " + str(elapsed) + "s!")
+        elif(url_path.path == "/available"):
+            self.cache_episodes(list(range(96)))
+            res = sorted(list(episode_table.keys()))
+            log(Mode.INFO, "Available episodes: " + str(res))
+            self.send_response(200)
+            self.do_HEAD()
+            self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
         else:
             code = 400
             self.send_response(code)
-            self.end_headers()
+            self.do_HEAD()
             self.wfile.write(bytearray(BaseHTTPRequestHandler.responses[code][1], 'utf-8'))
 
 def prime_file(filename):

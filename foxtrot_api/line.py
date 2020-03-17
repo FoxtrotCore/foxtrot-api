@@ -41,8 +41,14 @@ class Time:
                     elif(self.mil == src.mil): return True
         return False
 
-    def __eq__(self, src): return (self.hrs == src.hrs and self.min == src.min and self.sec == src.sec and self.mil == src.mil)
-    def __str__(self): return str(Time.pad(self.hrs) + ":" + Time.pad(self.min) + ":" + Time.pad(self.sec) + "." + Time.pad(self.mil, precision=3))
+    def __eq__(self, src): return (self.hrs == src.hrs \
+                                    and self.min == src.min \
+                                    and self.sec == src.sec \
+                                    and self.mil == src.mil)
+    def __str__(self): return str(str(self.hrs).rjust(2, '0') \
+                        + ":" + str(self.min).rjust(2, '0') \
+                        + ":" + str(self.sec).rjust(2, '0') \
+                        + "." + str(self.mil).rjust(3, '0'))
 
 class Line:
     def __init__(self,
@@ -59,5 +65,12 @@ class Line:
     def is_character(self, name): return (self.name.upper() == name.upper())
     def has_text(self, text): return (self.text.lower().find(text.lower()) != -1)
 
-    def __str__(self): return str("[" + str(self.start) + " - " + str(self.end) + "] <" + self.name + ">: " + self.text)
+    def __repr__(self):
+        res = {}
+        res['start_time'] = str(self.start)
+        res['end_time'] = str(self.end)
+        res['name'] = self.name
+        res['dialogue'] = self.text
+        return res
+
     def __str__(self): return str("[" + str(self.start) + " - " + str(self.end) + "] <" + self.name + ">: " + self.text)
