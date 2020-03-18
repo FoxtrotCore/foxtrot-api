@@ -16,6 +16,8 @@ An API for searching FTF transcripts.
 
 **All** of these parameters are repeatable if more than one is desired.
 
+**Only** one character or one dialogue is required to kick off a search but neither required for a search. The episode field is fully optional.
+
 **Exs:**
 
   `/search?episode=1&episode=2`
@@ -32,7 +34,7 @@ An API for searching FTF transcripts.
 
 *(Note: If no episodes are specified then all available episodes will be searched.)*
 
-**(WARNING: This WILL slow down your search time.)**
+**(WARNING: This WILL slow down your search time. Usually by a factor of 10x ~ 12s avg.)**
 
 ***
 
