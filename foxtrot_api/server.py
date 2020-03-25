@@ -117,11 +117,13 @@ class Handler(BaseHTTPRequestHandler):
     def do_JSON_HEAD(self):
         '''Constructs a response body in JSON.'''
         self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
     def do_HTML_HEAD(self):
         '''Constructs a response body in HTML.'''
         self.send_header('Content-Type', 'text/html')
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
     def do_GET(self):
