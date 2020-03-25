@@ -9,22 +9,32 @@ import os, os.path, ssl, sys, json, time
 httpd = None
 config = None
 episode_table = {}
-home_dir = os.path.expanduser("~/.ftf-api/")
-cache_dir = home_dir + "cache/"
+home_dir = os.path.expanduser('~/.ftf-api/')
+cache_dir = home_dir + 'cache/'
 
 class Handler(BaseHTTPRequestHandler):
     def __init__(self, request, client_addr, server):
+        '''A forward constructor for BaseHTTPRequestHandler'''
         super().__init__(request, client_addr, server)
+
+    def ep_to_fn(self, episode): return 'eng_' + str(episode).rjust(3, '0') + '_Code_Lyoko.ass'
+
+    def dump_script(self, filename):
+        '''
+        Reads a local file and dumps the contents.
+        filename: The path to the local file.
+        Returns: File contents in UTF-8 Encoding.
+        '''
+        file = open(filename, 'r+')
+        data = file.read()
+        file.close()
+        return data
 
     def get_script(self, filename):
         local_script_path = cache_dir + filename
         remote_script_path = config['script_uri'] + filename
 
-        if(os.path.exists(local_script_path)):
-            file = open(local_script_path, 'r+')
-            data = file.read()
-            file.close()
-            return data
+        if(os.path.exists(local_script_path)): return self.dump_script(local_script_path)
         else:
             con = HTTPSConnection(config['script_url'])
             con.request('GET', remote_script_path, {}, {})
@@ -32,26 +42,42 @@ class Handler(BaseHTTPRequestHandler):
 
             if(res.status == 200):
                 data = res.read().decode()
-                file = open(local_script_path, "w+")
+                file = open(local_script_path, 'w+')
                 file.write(data)
                 file.close()
                 return data
             else: return None
 
     def cache_episodes(self, episodes):
+        '''
+        Attemts to cache episodes locally.
+
+        episodes: The list of episodes to cache.
+        Returns: A boolean of whether or not all requested episodes got cached.
+        '''
         global episode_table
+        did_cache = True
         if(len(episodes) > 0): stuff = episodes
         else: stuff = list(range(96))
 
         for e in stuff:
             if(episode_table.get(e) is None):
-                name = "eng_" + str(e).rjust(3, '0') + '_Code_Lyoko.ass'
-                log(Mode.WARN, "Episode #" + str(e) + " is not loaded in the episode table!")
+                name = self.ep_to_fn(e)
+                log(Mode.WARN, 'Episode #' + str(e) + ' is not loaded in the episode table!')
                 ep_data = self.get_script(name)
-                if(ep_data is None): log(Mode.ERROR, "Failed to retrieve remote file: " + name)
+                if(ep_data is None):
+                    log(Mode.ERROR, 'Failed to retrieve remote file: ' + name)
+                    did_cache = False
                 else: episode_table[e] = Episode(e, ep_data)
+        return did_cache
 
     def sanitize_request(self, req):
+        '''
+        Sanitizes list of attributes according to their names.
+
+        req: A semi-processed http request object
+        Returns: [ list of characters, list of episodes, list of dialogues ]
+        '''
         characters = []
         episodes = []
         dialogues = []
@@ -71,20 +97,40 @@ class Handler(BaseHTTPRequestHandler):
 
         return characters, episodes, dialogues
 
+    def error_req(self, code, message=None):
+        '''
+        Sends a JSON error message to the client.
+        This assumes no header has been constructed and that the response body is currently empty.
+
+        code: The HTTP response code.
+        message: An optional message to append to the response.
+        Returns: The HTTP status code.
+        '''
+        log(Mode.WARN, 'SENT TO CLIENT [' + str(code) + ']: ' + str(message))
+        self.send_response(code)
+        self.do_JSON_HEAD()
+        self.wfile.write(bytearray(json.dumps({ 'status': code,
+                                                'error': BaseHTTPRequestHandler.responses[code][1],
+                                                'message': message}), 'utf-8'))
+        return code
+
     def do_JSON_HEAD(self):
+        '''Constructs a response body in JSON.'''
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
 
     def do_HTML_HEAD(self):
+        '''Constructs a response body in HTML.'''
         self.send_header('Content-Type', 'text/html')
         self.end_headers()
 
     def do_GET(self):
-        global episode_table
+        '''Handles an HTTP GET request.'''
+        start = time.time()
         url_path = urlparse(self.path)
         query = parse_qs(url_path.query)
 
-        if(url_path.path == '/'):
+        if(url_path.path == '/'): # Handle root path request
             file = open('index.html')
             res = file.read()
             file.close()
@@ -92,8 +138,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.do_HTML_HEAD()
             self.wfile.write(bytearray(res, 'UTF-8'))
-        elif(url_path.path == "/search"):
-            start = time.time()
+        elif(url_path.path == '/search'): # Handle search request
             characters, episodes, dialogues = self.sanitize_request(query)
             self.cache_episodes(episodes)
 
@@ -104,7 +149,7 @@ class Handler(BaseHTTPRequestHandler):
 
             for e in episodes:
                 if(episode_table.get(e) is None):
-                    log(Mode.ERROR, "Episode #" + str(e) + " is missing, skipping!")
+                    log(Mode.ERROR, 'Episode #' + str(e) + ' is missing, skipping!')
                     res['missing_eps'].append(e)
                     continue
                 else:
@@ -115,49 +160,66 @@ class Handler(BaseHTTPRequestHandler):
                         for c in characters: qres += episode_table[e].search(name=c)
                     elif(len(dialogues) > 0):
                         for d in dialogues: qres += episode_table[e].search(text=d)
-                    else:
-                        log(Mode.ERROR, "Not enough search terms!")
-                        break
+                    else: return self.error_req(400, 'Not enough search terms provided!')
 
             for line in qres: res['search_results'].append(line.to_dict())
             elapsed = round(1 * (time.time() - start), 4)
             res['search_time'] = elapsed
 
-            log(Mode.INFO, "Search finished in " + str(elapsed) + "s: " + str(res))
+            log(Mode.INFO, 'Search finished in ' + str(elapsed) + 's: ' + str(res))
 
             self.send_response(200)
             self.do_JSON_HEAD()
             self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
-        elif(url_path.path == "/available"):
-            start = time.time()
+        elif(url_path.path == '/available'): # Handle availability request
             self.cache_episodes(list(range(96)))
             res = {}
             res['available_episodes'] = sorted(list(episode_table.keys()))
             elapsed = round(1 * (time.time() - start), 4)
             res['search_time'] = elapsed
 
-            log(Mode.INFO, "Episode table populated in " + str(elapsed) + "s: " + str(res))
+            log(Mode.INFO, 'Episode table populated in ' + str(elapsed) + 's: ' + str(res))
 
             self.send_response(200)
             self.do_JSON_HEAD()
             self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
-        else:
-            code = 404
-            self.send_response(code)
-            self.do_HTML_HEAD()
-            self.wfile.write(bytearray(BaseHTTPRequestHandler.responses[code][1], 'utf-8'))
+        elif(url_path.path == '/script'): # Handle raw script retrieval request
+            characters, episodes, dialogues = self.sanitize_request(query)
+
+            if(len(episodes) == 1):
+                if(self.cache_episodes(episodes)):
+                    script = self.dump_script(cache_dir + self.ep_to_fn(episodes[0]))
+                    elapsed = round(1 * (time.time() - start), 4)
+
+                    log(Mode.INFO, 'Raw transcript fetched in ' + str(elapsed) + 's')
+
+                    self.send_response(200)
+                    self.do_HTML_HEAD()
+                    self.wfile.write(bytearray(script, 'utf-8'))
+                else: self.error_req(506, 'Failed to retrieve requested script!')
+            else: return self.error_req(400, 'Too few or too many episodes specified!')
+        else: self.error_req(404) # Handle undefined path
 
 def prime_file(filename):
-    if(filename is None): error("Must specify an SSL Cert/Key Pair!")
-    elif(not os.path.exists(filename)): error("Could not find SSL Cert/Key Pair!")
+    '''
+    Determines if the specified key/cert file exists.
+    '''
+    if(filename is None): error('Must specify an SSL Cert/Key Pair!')
+    elif(not os.path.exists(filename)): error('Could not find SSL Cert/Key Pair!')
 
 def prime_cache():
+    '''
+    Determines if the cache directory needs to be made for the first time.
+    '''
     if(not os.path.exists(cache_dir)):
-        log(Mode.WARN, "Cache dir not found: " + str(cache_dir) + "\n\tCreating now...")
+        log(Mode.WARN, 'Cache dir not found: ' + str(cache_dir) + '\n\tCreating now...')
         os.makedirs(cache_dir, exist_ok=True)
 
 def error(msg):
-    log(Mode.ERROR, "fatal: " + msg)
+    '''
+    Prints an error message to stdout then exits with a status of -1
+    '''
+    log(Mode.ERROR, 'fatal: ' + msg)
     sys.exit(-1)
 
 def start(host, port, key, cert):
@@ -167,14 +229,14 @@ def start(host, port, key, cert):
     prime_file(key)
     prime_file(cert)
     prime_cache()
-    config = load_json(home_dir + "config.json")
+    config = load_json(home_dir + 'config.json')
 
     httpd = HTTPServer((host, port), Handler) # Create the HTTP server
     httpd.socket = ssl.wrap_socket(httpd.socket, # Wrap with SSL
                     keyfile=key,
                     certfile=cert,
                     server_side=True)
-    log(Mode.INFO, "Server bound to port " + str(port) + "\n\tKey File: " + str(key) + "\n\tCert File: " + str(cert))
+    log(Mode.INFO, 'Server bound to port ' + str(port) + '\n\tKey File: ' + str(key) + '\n\tCert File: ' + str(cert))
     httpd.serve_forever(); # Start the server
 
 def stop():
