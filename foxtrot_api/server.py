@@ -4,13 +4,12 @@ from urllib.parse import urlparse, parse_qs
 from ftf_utilities import load_json, log, Mode
 from .episode import Episode
 from .line import Line
+from .common import *
 import os, os.path, ssl, sys, json, time
 
 httpd = None
 config = None
 episode_table = {}
-home_dir = os.path.expanduser('~/.ftf-api/')
-cache_dir = home_dir + 'cache/'
 
 class Handler(BaseHTTPRequestHandler):
     def __init__(self, request, client_addr, server):
@@ -231,7 +230,9 @@ def start(host, port, key, cert):
     prime_file(key)
     prime_file(cert)
     prime_cache()
-    config = load_json(home_dir + 'config.json')
+
+    try: config = load_json(config_path)
+    except FileNotFoundError as e: error("Config file does not exist! Server cannot continue!")
 
     httpd = HTTPServer((host, port), Handler) # Create the HTTP server
     httpd.socket = ssl.wrap_socket(httpd.socket, # Wrap with SSL
