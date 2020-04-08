@@ -5,7 +5,7 @@ from ftf_utilities import load_json, log, Mode
 from .episode import Episode
 from .line import Line
 from .common import *
-import os, os.path, ssl, sys, json, time
+import os.path, sys, json, time
 
 httpd = None
 config = None
@@ -201,21 +201,6 @@ class Handler(BaseHTTPRequestHandler):
             else: return self.error_req(400, 'Too few or too many episodes specified!')
         else: self.error_req(404) # Handle undefined path
 
-def prime_file(filename):
-    '''
-    Determines if the specified key/cert file exists.
-    '''
-    if(filename is None): error('Must specify an SSL Cert/Key Pair!')
-    elif(not os.path.exists(filename)): error('Could not find SSL Cert/Key Pair!')
-
-def prime_cache():
-    '''
-    Determines if the cache directory needs to be made for the first time.
-    '''
-    if(not os.path.exists(cache_dir)):
-        log(Mode.WARN, 'Cache dir not found: ' + str(cache_dir) + '\n\tCreating now...')
-        os.makedirs(cache_dir, exist_ok=True)
-
 def error(msg):
     '''
     Prints an error message to stdout then exits with a status of -1
@@ -223,23 +208,14 @@ def error(msg):
     log(Mode.ERROR, 'fatal: ' + msg)
     sys.exit(-1)
 
-def start(host, port, key, cert):
+def start(host, port):
     global httpd, config
-
-    # Prime the prerequisite files on disk
-    prime_file(key)
-    prime_file(cert)
-    prime_cache()
 
     try: config = load_json(config_path)
     except FileNotFoundError as e: error("Config file does not exist! Server cannot continue!")
 
     httpd = HTTPServer((host, port), Handler) # Create the HTTP server
-    httpd.socket = ssl.wrap_socket(httpd.socket, # Wrap with SSL
-                    keyfile=key,
-                    certfile=cert,
-                    server_side=True)
-    log(Mode.INFO, 'Server bound to port ' + str(port) + '\n\tKey File: ' + str(key) + '\n\tCert File: ' + str(cert))
+    log(Mode.INFO, 'Server bound to port ' + str(port))
     httpd.serve_forever(); # Start the server
 
 def stop():
