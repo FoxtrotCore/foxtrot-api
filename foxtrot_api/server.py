@@ -5,7 +5,7 @@ from ftf_utilities import load_json, log, Mode
 from .episode import Episode
 from .line import Line
 from .common import *
-import os.path, sys, json, time
+import os.path, sys, json, time, shutil
 
 httpd = None
 config = None
@@ -57,7 +57,7 @@ class Handler(BaseHTTPRequestHandler):
         global episode_table
         did_cache = True
         if(len(episodes) > 0): stuff = episodes
-        else: stuff = list(range(96))
+        else: stuff = list(range(96 - (96 - config['ep_cap'])))
 
         for e in stuff:
             if(episode_table.get(e) is None):
@@ -89,7 +89,7 @@ class Handler(BaseHTTPRequestHandler):
 
         if(type(raw_eps) is list):
             for e in raw_eps: episodes.append(int(e))
-        else: episodes = list(range(96))
+        else: episodes = []
 
         if(type(raw_dial) is list):
             for d in raw_dial: dialogues.append(d.strip())
@@ -125,8 +125,15 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
+    def do_REDIRECT(self, path):
+        self.send_response(301)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Location', path)
+        self.end_headers()
+
     def do_GET(self):
         '''Handles an HTTP GET request.'''
+        global episode_table
         start = time.time()
         url_path = urlparse(self.path)
         query = parse_qs(url_path.query)
@@ -173,7 +180,7 @@ class Handler(BaseHTTPRequestHandler):
             self.do_JSON_HEAD()
             self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
         elif(url_path.path == '/available'): # Handle availability request
-            self.cache_episodes(list(range(96)))
+            self.cache_episodes([])
             res = {}
             res['available_episodes'] = sorted(list(episode_table.keys()))
             elapsed = round(1 * (time.time() - start), 4)
@@ -199,6 +206,16 @@ class Handler(BaseHTTPRequestHandler):
                     self.wfile.write(bytearray(script, 'utf-8'))
                 else: self.error_req(506, 'Failed to retrieve requested script!')
             else: return self.error_req(400, 'Too few or too many episodes specified!')
+        elif(url_path.path == '/clearcache'): # Handle cache clear requests
+            # Wipe the existing cache in memory and on disk
+            episode_table = {}
+            shutil.rmtree(cache_dir, ignore_errors = True)
+            os.makedirs(cache_dir)
+            log(Mode.INFO, "Clearing cache dir: " + cache_dir)
+
+            # Recache and redirect to the '/available' endpoint
+            self.cache_episodes([])
+            self.do_REDIRECT('/available')
         else: self.error_req(404) # Handle undefined path
 
 def error(msg):
