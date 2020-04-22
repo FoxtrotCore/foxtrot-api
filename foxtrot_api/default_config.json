@@ -2,5 +2,6 @@
         "host": "",
         "port": 2697,
         "script_url": "raw.githubusercontent.com",
-        "script_uri": "/FoxtrotCore/misc/master/subtitles/ass/"
+        "script_uri": "/FoxtrotCore/misc/master/subtitles/ass/",
+        "ep_cap": 53
 }
