@@ -18,6 +18,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def ep_to_fn(self, episode): return 'eng_' + str(episode).rjust(3, '0') + '_Code_Lyoko.ass'
 
+    def load_enc(self, path):
+        with open(path, 'rb') as file: return file.read()
+
     def dump_script(self, filename):
         '''
         Reads a local file and dumps the contents.
@@ -89,7 +92,7 @@ class Handler(BaseHTTPRequestHandler):
 
         if(type(raw_eps) is list):
             for e in raw_eps: episodes.append(int(e))
-        else: episodes = []
+        else: episodes = list(range(96 - (96 - config['ep_cap'])))
 
         if(type(raw_dial) is list):
             for d in raw_dial: dialogues.append(d.strip())
@@ -113,23 +116,37 @@ class Handler(BaseHTTPRequestHandler):
                                                 'message': message}), 'utf-8'))
         return code
 
+    def common_header(self):
+        '''Common attributes among headers'''
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Content-Security-Policy', 'default-src: self')
+        self.end_headers()
+
     def do_JSON_HEAD(self):
         '''Constructs a response body in JSON.'''
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
     def do_HTML_HEAD(self):
         '''Constructs a response body in HTML.'''
         self.send_header('Content-Type', 'text/html')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
+        self.common_header()
+
+    def do_DOC_HEAD(self, name):
+        '''Constructs a response body in plain text.'''
+        self.send_header('Content-Type', 'application/x-www-form-urlencoded')
+        self.send_header('Content-Disposition', 'attatchment; filename="' + name + '"')
+        self.common_header()
+
+    def do_ICO_HEAD(self):
+        self.send_header('Content-Type', 'image/x-icon')
+        self.common_header()
 
     def do_REDIRECT(self, path):
+        '''Constructs a response for permanent redirect.'''
         self.send_response(301)
-        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Location', path)
-        self.end_headers()
+        self.common_header()
 
     def do_GET(self):
         '''Handles an HTTP GET request.'''
@@ -139,16 +156,24 @@ class Handler(BaseHTTPRequestHandler):
         query = parse_qs(url_path.query)
 
         if(url_path.path == '/'): # Handle root path request
-            file = open('index.html')
+            file = open('res/index.html')
             res = file.read()
             file.close()
 
             self.send_response(200)
             self.do_HTML_HEAD()
             self.wfile.write(bytearray(res, 'UTF-8'))
+        elif(url_path.path == '/favicon.ico'):
+            self.send_response(200)
+            self.do_ICO_HEAD()
+            self.wfile.write(self.load_enc('res/favicon.ico'))
         elif(url_path.path == '/search'): # Handle search request
-            characters, episodes, dialogues = self.sanitize_request(query)
-            self.cache_episodes(episodes)
+            try:
+                characters, episodes, dialogues = self.sanitize_request(query)
+                self.cache_episodes(episodes)
+            except ValueError:
+                self.error_req(400, 'Bad parameter value types.')
+                return
 
             qres = []
             res = {}
@@ -192,7 +217,10 @@ class Handler(BaseHTTPRequestHandler):
             self.do_JSON_HEAD()
             self.wfile.write(bytearray(json.dumps(res), 'UTF-8'))
         elif(url_path.path == '/script'): # Handle raw script retrieval request
-            characters, episodes, dialogues = self.sanitize_request(query)
+            try: characters, episodes, dialogues = self.sanitize_request(query)
+            except ValueError:
+                self.error_req(400, 'Bad parameter value types.')
+                return
 
             if(len(episodes) == 1):
                 if(self.cache_episodes(episodes)):
@@ -202,21 +230,34 @@ class Handler(BaseHTTPRequestHandler):
                     log(Mode.INFO, 'Raw transcript fetched in ' + str(elapsed) + 's')
 
                     self.send_response(200)
-                    self.do_HTML_HEAD()
+                    self.do_DOC_HEAD('eng_' + str(episodes[0]).rjust(3, '0') + '_Code_Lyoko.ass')
                     self.wfile.write(bytearray(script, 'utf-8'))
                 else: self.error_req(506, 'Failed to retrieve requested script!')
             else: return self.error_req(400, 'Too few or too many episodes specified!')
-        elif(url_path.path == '/clearcache'): # Handle cache clear requests
-            # Wipe the existing cache in memory and on disk
-            episode_table = {}
-            shutil.rmtree(cache_dir, ignore_errors = True)
-            os.makedirs(cache_dir)
-            log(Mode.INFO, "Clearing cache dir: " + cache_dir)
-
-            # Recache and redirect to the '/available' endpoint
-            self.cache_episodes([])
-            self.do_REDIRECT('/available')
         else: self.error_req(404) # Handle undefined path
+
+    def do_POST(self):
+        '''Handles an HTTP GET request.'''
+        global episode_table
+        start = time.time()
+        url_path = urlparse(self.path)
+        query = parse_qs(url_path.query)
+        api_tokens = load_json(tokens_path)
+        client_token = self.headers.get('Authorization')
+
+        if(client_token in api_tokens):
+            if(url_path.path == '/clearcache'): # Handle cache clear requests
+                # Wipe the existing cache in memory and on disk
+                episode_table = {}
+                shutil.rmtree(cache_dir, ignore_errors = True)
+                os.makedirs(cache_dir)
+                log(Mode.INFO, "Clearing cache dir: " + cache_dir)
+
+                # Recache and redirect to the '/available' endpoint
+                self.cache_episodes([])
+                self.do_REDIRECT('/available')
+            else: self.error_req(404) # Handle undefined path
+        else: self.error_req(403)
 
 def error(msg):
     '''
