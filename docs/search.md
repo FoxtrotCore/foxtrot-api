@@ -1,13 +1,20 @@
 # Search
-This endpoint gets a raw transcript base on the single-parameter: episode specified.
+This endpoint performs a parameterized search, based on the options listed below.
 
-`episode` is the only parameter searched for. If more than one `episode` field is provided, only the first occurrence will be used.
+At least one `character` or one `dialogue` is required for a search. If neither are provided, then a `406` is returned, citing invalid arguments.
 
+Multiple of each parameter can be provided. Adding multiple of one parameter acts as a logical OR to the search terms.
 
 |  HTTP Request | Headers |              Parameters              | Returns                                                    |
 |:-------------:|:-------:|:------------------------------------:|------------------------------------------------------------|
-| GET `/search` |   None  | [`episode`, `character`, `dialogue`] | A list of `Line` instances matching the search parameters. |
+| GET `/search` |   None  | [ `episode`, `character`, `dialogue` ] | A list of `Line` instances matching the search parameters. |
 
+## JSON Payload
+| Name               | Type          | Description                                                               |
+|--------------------|---------------|---------------------------------------------------------------------------|
+| search_results | array\<Line> | A list of `Line` objects that matched the search terms.               |
+| missing_episodes   | array\<number> | A list of episodes, by production code, that are missing or non-existant. |
+| search_time        | number        | Time in seconds it took to service the request.                           |
 
 ## Line
 
