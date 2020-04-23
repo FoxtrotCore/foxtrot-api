@@ -178,7 +178,9 @@ class Handler(BaseHTTPRequestHandler):
             qres = []
             res = {}
             res['search_results'] = []
-            res['missing_eps'] = []
+            res['missing_episodes'] = []
+            ep_cap = config.get('ep_cap')
+            if(ep_cap is not None and ep_cap < 96): res['missing_episodes'] = list(range(ep_cap, 96))
 
             for e in episodes:
                 if(episode_table.get(e) is None):
@@ -208,6 +210,9 @@ class Handler(BaseHTTPRequestHandler):
             self.cache_episodes([])
             res = {}
             res['available_episodes'] = sorted(list(episode_table.keys()))
+            res['missing_episodes'] = []
+            ep_cap = config.get('ep_cap')
+            if(ep_cap is not None and ep_cap < 96): res['missing_episodes'] = list(range(ep_cap, 96))
             elapsed = round(1 * (time.time() - start), 4)
             res['search_time'] = elapsed
 
