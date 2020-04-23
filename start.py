@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os, foxtrot_api.server as ftfapi, sys
-from foxtrot_api.common import config_path, cache_dir
+from foxtrot_api.common import config_path, tokens_path, cache_dir
 from ftf_utilities import load_json, dump_json, log, Mode
 
 # Prime the cache directory
@@ -12,8 +12,14 @@ if(not os.path.exists(cache_dir)):
 try: config = load_json(config_path)
 except FileNotFoundError as e:
     log(Mode.WARN, "Config file does not exist!\n\tGenerating: " + config_path)
-    dump_json(config_path, load_json("foxtrot_api/default_config.json"))
+    dump_json(config_path, load_json("res/default_config.json"))
     config = load_json(config_path)
+
+# Load the tokens
+try: _ = load_json(tokens_path)
+except FileNotFoundError as e:
+    log(Mode.WARN, "API Token Authentication List does not exist!\n\tGenerating: " + tokens_path)
+    dump_json(tokens_path, [])
 
 # Start the server
 try: ftfapi.start(config['host'], config['port'])
