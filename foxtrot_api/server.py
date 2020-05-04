@@ -125,7 +125,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_JSON_HEAD(self):
         '''Constructs a response body in JSON.'''
         self.send_header('Content-Type', 'application/json')
-        self.end_headers()
+        self.common_header()
 
     def do_HTML_HEAD(self):
         '''Constructs a response body in HTML.'''
