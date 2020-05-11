@@ -75,7 +75,7 @@ class Handler(BaseHTTPRequestHandler):
         Returns: A boolean of whether or not all requested episodes got cached.
         '''
         global episode_table
-        did_cache = True
+        missing = []
 
         if(len(episodes) > 0):
             stuff = episodes
@@ -91,10 +91,10 @@ class Handler(BaseHTTPRequestHandler):
 
                 if(ep_data is None):
                     log(Mode.ERROR, 'Failed to retrieve remote file: ' + name)
-                    did_cache = False
+                    missing.append(e)
                 else:
                     episode_table[e] = Episode(e, ep_data)
-        return did_cache
+        return missing
 
     def sanitize_request(self, req):
         '''
@@ -163,7 +163,7 @@ class Handler(BaseHTTPRequestHandler):
         global episode_table
         try:
             characters, episodes, dialogues = self.sanitize_request(query)
-            self.cache_episodes(episodes)
+            missing = self.cache_episodes(episodes)
         except ValueError:
             self.error_req(400, 'Bad parameter value types.')
             return
@@ -171,11 +171,11 @@ class Handler(BaseHTTPRequestHandler):
         qres = []
         res = {}
         res['search_results'] = []
-        res['missing_episodes'] = []
+        res['missing_episodes'] = missing
         ep_cap = config.get('ep_cap')
 
         if(ep_cap is not None and ep_cap < 96):
-            res['missing_episodes'] = list(range(ep_cap, 96))
+            res['missing_episodes'] += list(range(ep_cap, 96))
 
         for e in episodes:
             if(episode_table.get(e) is None):
@@ -213,13 +213,15 @@ class Handler(BaseHTTPRequestHandler):
 
     def serve_available(self, query, start_time):
         global episode_table
-        self.cache_episodes([])
+        missing = self.cache_episodes([])
         res = {}
         res['available_episodes'] = sorted(list(episode_table.keys()))
-        res['missing_episodes'] = []
+        res['missing_episodes'] = missing
         ep_cap = config.get('ep_cap')
+
         if(ep_cap is not None and ep_cap < 96):
-            res['missing_episodes'] = list(range(ep_cap, 96))
+            res['missing_episodes'] += list(range(ep_cap, 96))
+
         elapsed = round(1 * (time.time() - start_time), 4)
         res['search_time'] = elapsed
 
@@ -256,7 +258,7 @@ class Handler(BaseHTTPRequestHandler):
 
             self.wfile.write(self.dump_file(zip_path, mode='rb'))
         elif(len(episodes) == 1):
-            if(self.cache_episodes(episodes)):
+            if(len(self.cache_episodes(episodes)) == 0):
                 script = self.dump_file(cache_dir
                                         + self.ep_to_fn(episodes[0]))
                 elapsed = round(1 * (time.time() - start_time), 4)
