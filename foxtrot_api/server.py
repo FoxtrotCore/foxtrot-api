@@ -180,7 +180,7 @@ class Handler(BaseHTTPRequestHandler):
         for e in episodes:
             if(episode_table.get(e) is None):
                 log(Mode.ERROR, 'Episode #' + str(e) + ' is missing!')
-                res['missing_eps'].append(e)
+                res['missing_episodes'].append(e)
                 continue
             else:
                 if(len(characters) > 0 and len(dialogues) > 0):
