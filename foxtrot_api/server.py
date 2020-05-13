@@ -3,7 +3,7 @@ from http.client import HTTPSConnection
 from urllib.parse import urlparse, parse_qs
 from ftf_utilities import load_json, log, Mode
 from .episode import Episode
-from .common import cache_dir, tokens_path, config_path
+from .common import cache_dir, config_path
 import os.path
 import sys
 import json
@@ -14,6 +14,7 @@ import zipfile
 httpd = None
 config = None
 episode_table = {}
+user_agents_db = None
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -341,14 +342,18 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         '''Handles an HTTP POST request.'''
+        global user_agents_db
+
         start_time = time.time()
         url_path = urlparse(self.path)
         query = parse_qs(url_path.query)
-        api_tokens = load_json(tokens_path)
         client_token = self.headers.get('Authorization')
+        db_entry = user_agents_db.get_user_by_token(client_token)
+
+        log(Mode.DEBUG, "Entry: " + str(db_entry))
 
         if(url_path.path == '/clearcache'):  # Handle clear cache requests
-            if(client_token in api_tokens):  # Valid token, handle request
+            if((db_entry is not None) and (True)):  # Valid token, handle request
                 self.serve_clearcache(query, start_time)
             else:  # Invalid token, reject request
                 self.error_req(403)
@@ -364,8 +369,10 @@ def error(msg):
     sys.exit(-1)
 
 
-def start(host, port):
-    global httpd, config
+def start(host, port, db):
+    global httpd, config, user_agents_db
+
+    user_agents_db = db
 
     try:
         config = load_json(config_path)
