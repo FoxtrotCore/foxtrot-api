@@ -9,6 +9,14 @@ class Database:
         self.connection = sqlite3.connect(self.db_path)
         self.cipher = Fernet(repr(secret))
 
+    def field_no(name):
+        return {
+            'api_token': 0,
+            'username': 1,
+            'request_count': 2,
+            'privilege': 3
+        }[name]
+
     def encrypt(self, data):
         return str(self.cipher.encrypt(bytes(data, 'utf-8')))[2:-1]
 
@@ -33,13 +41,13 @@ class Database:
 
     def get(self, field, token):
         try:
-            return self.connection.cursor().execute('SELECT '
-                                                    + str(field)
-                                                    + ' FROM '
-                                                    + self.name
-                                                    + ' WHERE api_token="'
-                                                    + str(token)
-                                                    + '";').fetchone()[0]
+            for e in self.connection.cursor().execute('SELECT * FROM '
+                                                      + self.name
+                                                      + ';').fetchall():
+                decrypted = self.decrypt(e[0])
+                if(decrypted == token):
+                    return e[Database.field_no(field)]
+            return None
         except sqlite3.OperationalError:
             return None
 
@@ -64,13 +72,6 @@ class Database:
         if(token is None):
             token = self.gen_key()
 
-        encrypted = self.encrypt(token)
-        decrypted = self.decrypt(encrypted)
-
-        print("\ttoken: " + str(token) + "\n\tencrpyted: " + str(encrypted) + "\n\tdecrypted: " + str(decrypted))
-
-        if (decrypted != token): raise Exception('bad encrpytion')
-
         try:
             self.connection.cursor().execute(
                 'INSERT INTO '
@@ -89,11 +90,13 @@ class Database:
 
     def get_user_by_token(self, token):
         try:
-            return self.connection.cursor().execute('SELECT * FROM '
-                                                    + self.name
-                                                    + ' WHERE api_token="'
-                                                    + self.encrypt(token)
-                                                    + '";').fetchone()
+            for e in self.connection.cursor().execute('SELECT * FROM '
+                                                      + self.name
+                                                      + ';').fetchall():
+                decrypted_token = self.decrypt(e[0])
+                if(decrypted_token == token):
+                    return e
+            return None
         except sqlite3.OperationalError:
             return None
 
@@ -117,29 +120,38 @@ class Database:
 
     def increment_request_count(self, token):
         try:
-            self.connection.cursor().execute(
-                'UPDATE '
-                + self.name
-                + ' SET request_count='
-                + str(self.get('request_count', token))
-                + '+1 WHERE api_token="'
-                + str(token)
-                + '";').fetchall()
-            self.commit()
-            return True
+            for e in self.connection.cursor().execute('SELECT * FROM '
+                                                      + self.name
+                                                      + ';').fetchall():
+                decrypted_token = self.decrypt(e[0])
+                if(decrypted_token == token):
+                    self.connection.cursor().execute('UPDATE '
+                                                     + self.name
+                                                     + ' SET request_count='
+                                                     + str(e[2] + 1)
+                                                     + ' WHERE username="'
+                                                     + e[1]
+                                                     + '";')
+                    return True
+            return False
         except sqlite3.OperationalError:
             return False
 
     def reset_request_count(self, token):
         try:
-            self.connection.cursor().execute(
-                'UPDATE '
-                + self.name
-                + ' SET request_count=0 WHERE api_token="'
-                + str(token)
-                + '";').fetchall()
-            self.commit()
-            return True
+            for e in self.connection.cursor().execute('SELECT * FROM '
+                                                      + self.name
+                                                      + ';').fetchall():
+                decrypted_token = self.decrypt(e[0])
+                if(decrypted_token == token):
+                    self.connection.cursor().execute('UPDATE '
+                                                     + self.name
+                                                     + ' SET request_count=0'
+                                                     + ' WHERE username="'
+                                                     + e[1]
+                                                     + '";')
+                    return True
+            return False
         except sqlite3.OperationalError:
             return False
 
