@@ -146,6 +146,11 @@ class Handler(BaseHTTPRequestHandler):
                         'message': message}), 'utf-8'))
         return code
 
+    def authenticate(self, token, required_privilege=0):
+        global user_agents_db
+        db_entry = user_agents_db.get_user_by_token(token)
+        return (db_entry is not None) and (db_entry[3] >= required_privilege)
+
     def serve_root(self, query):
         file = open('res/index.html')
         res = file.read()
@@ -257,7 +262,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.do_DOC_HEAD(zip_path, content_type='application/zip')
 
-            self.wfile.write(self.dump_file(zip_path, mode='rb'))
+
         elif(len(episodes) == 1):
             if(len(self.cache_episodes(episodes)) == 0):
                 script = self.dump_file(cache_dir
@@ -287,6 +292,9 @@ class Handler(BaseHTTPRequestHandler):
         # Recache and redirect to the '/available' endpoint
         self.cache_episodes([])
         self.do_REDIRECT('/available')
+
+    def serve_new(self, query, start_time):
+        self.error_req(200)
 
     def common_header(self):
         '''Common attributes among headers'''
@@ -342,20 +350,30 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         '''Handles an HTTP POST request.'''
-        global user_agents_db
-
         start_time = time.time()
         url_path = urlparse(self.path)
         query = parse_qs(url_path.query)
         client_token = self.headers.get('Authorization')
-        db_entry = user_agents_db.get_user_by_token(client_token)
+        content_length = int(self.headers.get('Content-Length'))
+        payload = self.rfile.read(content_length)
 
-        log(Mode.DEBUG, "Entry: " + str(db_entry))
+        log(Mode.DEBUG, "payload: " + str(payload))
 
         if(url_path.path == '/clearcache'):  # Handle clear cache requests
-            if((db_entry is not None) and (True)):  # Valid token, handle request
+            # Authenticate the token and handle the request if valid
+            if(self.authenticate(client_token, required_privilege=3)):
                 self.serve_clearcache(query, start_time)
-            else:  # Invalid token, reject request
+                user_agents_db.increment_request_count(client_token)
+            # Invalid token, reject the request
+            else:
+                self.error_req(403)
+        elif(url_path.path == '/new'): # Handle new user generation requests
+            # Authenticate the token and handle the request if valid
+            if(self.authenticate(client_token, required_privilege=2)):
+                self.serve_new(query, start_time)
+                user_agents_db.increment_request_count(client_token)
+            # Invalid token, reject the request
+            else:
                 self.error_req(403)
         else:  # Handle anything else as am undefined path
             self.error_req(404)
