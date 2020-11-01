@@ -1,0 +1,6 @@
+discord
+ftf_utilities
+urllib3
+zipfile36
+sqlite-utils
+cryptography
