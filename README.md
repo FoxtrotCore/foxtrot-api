@@ -1,7 +1,5 @@
-# Foxtrot-API
+# Foxtrot API
 
-An API for searching FTF transcripts.
+An API for searching and delivering Code Lyoko transcripts and subtitles.
 
-## [Endpoints Table](docs/endpoints.md)
-
-## [Usage](docs/usage.md)
+### [Apiary Documentation](https://foxtrotapi.docs.apiary.io)
