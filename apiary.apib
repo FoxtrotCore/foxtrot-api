@@ -3,11 +3,26 @@ HOST: https://api.foxtrotfanatics.com/
 
 # Foxtrot API
 
-An API for searching and delivering Code Lyoko transcripts and subtitles.
+An API for searching and delivering Code Lyoko transcripts and subtitles across the web.
+
+## Version [/version]
+
+This endpoint is for fetching the API's active version.
+
+### Get the active API version [GET]
+
++ Response 200 (application/json)
+
+        {
+            'version': (string)
+        }
 
 ## User [/user]
 
+This endpoint is for creating, updating, managing, or deleting registered API users.
+
 ### Get user information [GET]
+
 + Request
     + Headers
 
@@ -27,13 +42,9 @@ An API for searching and delivering Code Lyoko transcripts and subtitles.
         }
 
 + Response 404 (application/json)
-    
     + Headers
 
             Accept: 'The unique token provided does not exist.'
-
-
-
 
 + Request
 
@@ -97,7 +108,6 @@ An API for searching and delivering Code Lyoko transcripts and subtitles.
         }
 
 + Response 404 (application/json)
-    
     + Headers
 
             Accept: 'The unique token provided does not exist.'
@@ -134,6 +144,165 @@ An API for searching and delivering Code Lyoko transcripts and subtitles.
 
         {
             'message': 'user deleted'
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."
+
+## Subtitle [/subtitle] 
+
+This endpoint is for fetching information about groups of available subtitles or for fetching individual subtitle files in a specified format of a specified episode (production-code) for either in-browser-display or direct download.
+
+### Get available subtitle formats [GET]
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Token (string, required)
+
++ Response 200 (application/json)
+
+        {
+            formats: [
+                'ass',
+                'docx',
+                'smi',
+                'srt',
+                'stl',
+                'txt',
+                'vtt'
+            ]
+        }
+
++ Request
+
+        {
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."
+
+
+### Get available subtitles per format [GET /subtitle/{format}]
+
++ Parameters
+    + format (string, required) - The subtitle format to look for.
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Token (string, required)
+
++ Response 200 (application/json)
+        
+        {
+            'files': [
+                (string) - The list of files available for search or download.
+            ]
+        }
+
++ Response 404 (application/json)
+    + Headers
+
+            Accept: 'The format provided does not exist. Request the `/subtitle` endpoint for a list of available formats.'
+
++ Request
+
+        {
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."
+
+### Get individual subtitle file [GET /subtitle/{format}/{episode}&{download}]
+
++ Parameters
+    + format (string, required) - The subtitle format to look for.
+    + episode (number, required) - The production-code id of the episode to look for.
+    + download (boolean, optional) - An indicator to download the file locally instead of rendering it in-browser.
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Token (string, required)
+
++ Response 200 (text/plain)
+
+    + Body
+
+            (string)
+
++ Response 200 (application/x-www-form-urlencoded)
+
+    + Headers
+
+            Content-Disposition: 'attatchment; filename="{filename}"'
+
++ Response 404 (application/json)
+    
+    + Headers
+
+            Accept: 'The episode production-code provided does not exist in the subtitle format requested.'
+
++ Request
+
+        {
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."
+
+## Search [/search]
+
+This endpoint is for performing a parameterized search of all available subtitles based on one or more of the following parameters. All parameters are optional, but one of the three must be a non-null value in order to perform the search.
+
+### Search subsequently available subtitle [GET /search?{production_code}&{character}&{dialogue}]
+
++ Parameters
+    + production_code (number, optional) - The production code of the episode to search.
+    + character (string, optional) - The character to filter the results by.
+    + dialogue (string, optional) - A substring of dialogue to filter the results by.
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Token (string, required)
+
++ Response 200 (application/json)
+
+        {
+            'results': [
+                {
+                    'production_code': (number),
+                    'timestamp': {
+                        'in': (string),
+                        'out': (string)
+                    },
+                    'character': (string),
+                    'dialogue': (string)
+                }
+            ],
+            'search_time': (string) - Time in milliseconds the search took. (Note: not the same as time taken to serve the full HTTP request).
+        }
+
++ Response 406 (application/json)
+    
+    + Headers
+        
+            Accept: 'Failed to perform search. Character must be a valid string. Production code must be a valid number in the correct domain (See https://en.wikipedia.org/wiki/List_of_Code_Lyoko_episodes for episode production codes). And dialogue must be a valid string.'
+
+
++ Request
+
+        {
         }
 
 + Response 401 (application/json)
