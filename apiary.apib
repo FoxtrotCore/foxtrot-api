@@ -1,0 +1,142 @@
+FORMAT: 1A
+HOST: https://api.foxtrotfanatics.com/
+
+# Foxtrot API
+
+An API for searching and delivering Code Lyoko transcripts and subtitles.
+
+## User [/user]
+
+### Get user information [GET]
++ Request
+    + Headers
+
+            Authorization: Token (string, required)
+
++ Response 200 (application/json)
+
+        {
+            'user': {
+                'email': (string),
+                'token': (string),
+                'privilege': (int),
+                'requests_made': (int),
+                'rate_limited': (bool),
+                'ip_origin': (string)
+            }
+        }
+
++ Response 404 (application/json)
+    
+    + Headers
+
+            Accept: 'The unique token provided does not exist.'
+
+
+
+
++ Request
+
+        {
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."
+
+
+
+
+
+### Create a new user [POST]
++ Request (application/json)
+
+    + Body
+
+            {
+                'email': (string, required)
+            }
+
++ Response 201 (application/json)
+
+        {
+            'message': 'user created',
+            'user': {
+                'email': (string),
+                'token': (string),
+                'privilege': (int),
+                'requests_made': (int),
+                'rate_limited': (bool),
+                'ip_origin': (string)
+            }
+        }
+
++ Response 406 (application/json)
+    
+    + Headers
+        
+            Accept: 'Failed to create user: email is invalid or already in use. email must follow pattern: [a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]'
+
+### Update a user [PATCH]
++ Request (application/json)
+    + Headers
+
+            Authorization: Token (string, required)
+
+    + Body
+
+            {
+                'email': (string, required)
+            }
+
++ Response 202 (application/json)
+
+        {
+            'message': 'user updated'
+        }
+
++ Response 404 (application/json)
+    
+    + Headers
+
+            Accept: 'The unique token provided does not exist.'
+
++ Response 406 (application/json)
+    
+    + Headers
+        
+            Accept: 'Failed to update user: email is invalid or already in use. email must follow pattern: [a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]'
+
+
+
+
++ Request
+
+        {
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."
+
+
+
+
+### Delete a user [DELETE]
++ Request (application/json)
+    + Headers
+
+            Authorization: Token (string, required)
+
++ Response 202 (application/json)
+
+        {
+            'message': 'user deleted'
+        }
+
++ Response 401 (application/json)
+    + Headers
+
+            WWW-Authenticate: "Authentication is required via the 'Authorization' header with your unique Foxtrot API token."

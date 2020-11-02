@@ -1,6 +1,9 @@
-discord
-ftf_utilities
-urllib3
-zipfile36
-sqlite-utils
-cryptography
+click>=7.1.2
+Flask>=1.1.2
+Flask-RESTful>=0.3.8
+gunicorn>=20.0.4
+itsdangerous>=1.1.0
+Jinja2>=2.11.2
+MarkupSafe>=1.1.1
+Werkzeug>=1.0.1
+loguru>=0.5.0
