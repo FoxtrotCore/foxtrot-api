@@ -1,0 +1,8 @@
+runtime: python38
+
+entrypoint: gunicorn --workers 2 --bind :8080 foxtrot_api:app
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always

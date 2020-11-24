@@ -1,0 +1,3 @@
+include *.apib
+include *.txt
+include Procfile
