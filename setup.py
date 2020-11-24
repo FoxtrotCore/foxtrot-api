@@ -1,21 +1,19 @@
 import setuptools
-import foxtrot_api
+import foxtrot_api as fa
 
 with open('README.md', 'r') as file:
     long_description = file.read()
 
-with open('requirements.txt', 'r') as file:
-    dependencies = file.read().split('\n')[:-1]
-
 setuptools.setup(
-    name=foxtrot_api.APP_NAME,
-    version=foxtrot_api.APP_VERSION,
-    author=foxtrot_api.APP_AUTHOR,
-    license=foxtrot_api.APP_LICENSE,
-    description=foxtrot_api.APP_DESCRIPTION,
+    name=fa.APP_NAME,
+    version=fa.APP_VERSION,
+    url=fa.APP_URL,
+    author=fa.APP_AUTHOR,
+    author_email=fa.APP_AUTHOR_EMAIL,
+    license=fa.APP_LICENSE,
+    description=fa.APP_DESCRIPTION,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url=foxtrot_api.APP_URL,
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -24,11 +22,25 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Information Analysis"
     ],
-    install_requires=dependencies,
+    install_requires=[
+        "gunicorn",
+        "Flask",
+        "Flask-RESTful",
+        "Flask-Cors"
+    ],
+    extra_requires={
+        "dev": [
+            "twine",
+            "pytest",
+            "sphinx",
+            "check-manifest",
+            "sphinx-rtd-theme"
+        ]
+    },
     python_requires='>=3.8.5',
     entry_points={
         "console_scripts": [
-            '{} = foxtrot_api.__main__:main'.format(foxtrot_api.APP_NAME),
+            '{} = foxtrot_api.__main__:main'.format(fa.APP_NAME),
         ]
     }
 )

@@ -1,32 +1,34 @@
+import os
+import logging
 import flask
 import flask_restful
 from flask_cors import CORS
-from .logger import init
-from .endpoints import RootEndpoint,  BareUserEndpoint, UserEndpoint
+from foxtrot_api.endpoints import (
+    RootEndpoint,
+    BareUserEndpoint,
+    UserEndpoint
+)
 
 MAJOR = 2
-MINOR = 0
+MINOR = 1
 PATCH = 0
 
 APP_NAME = 'foxtrot-api'
+APP_VERSION = "{}.{}.{}".format(MAJOR, MINOR, PATCH)
+APP_URL = "https://github.com/FoxtrotCore/foxtrot-api"
+APP_AUTHOR = "Dmitri McGuckin"
+APP_AUTHOR_EMAIL = 'hello@foxtrotfanatics.com'
+APP_LICENSE = 'MIT'
 APP_DESCRIPTION = 'An API for searching and downloading Code Lyoko ' \
                   'transcripts and subtitles.'
-APP_VERSION = "{}.{}.{}".format(MAJOR, MINOR, PATCH)
-APP_AUTHOR = "Dmitri McGuckin"
-APP_EMAIL = 'hello@foxtrotfanatics.com'
-APP_URL = "https://github.com/FoxtrotCore/foxtrot-api"
+
 APP_DOCS = 'https://foxtrotapi.docs.apiary.io'
-APP_LICENSE = 'MIT'
 
-APP_HOST = '0.0.0.0'
-APP_PORT = 8080
-
-# Green Unicorn config and setup
-bind = "{}:{}".format(APP_HOST, APP_PORT)
-workers = 2
-
-# Application logging initialization
-init(__name__)
+# Logging config
+LOG_DIR = os.path.expanduser(f'~/.local/share/{APP_NAME}/')
+LOG_FORMAT = logging.Formatter('[%(asctime)s][%(filename)s:%(lineno)d]'
+                               '[%(levelname)s]: %(message)s')
+os.makedirs(LOG_DIR, exist_ok=True)
 
 # API application build + resource endpoints
 app = flask.Flask(__name__)
