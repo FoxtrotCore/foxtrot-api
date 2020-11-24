@@ -1,5 +1,13 @@
 import logging
-from . import app, APP_NAME, LOG_DIR, LOG_FORMAT
+import flask
+import flask_restful
+from flask_cors import CORS
+from foxtrot_api.endpoints import (
+    RootEndpoint,
+    BareUserEndpoint,
+    UserEndpoint
+)
+from . import APP_NAME, LOG_DIR, LOG_FORMAT
 
 LOG_HANDLERS = [
     (logging.INFO, logging.FileHandler(filename=f'{LOG_DIR}/info.log')),
@@ -7,6 +15,18 @@ LOG_HANDLERS = [
     (logging.DEBUG, logging.FileHandler(filename=f'{LOG_DIR}/debug.log')),
     (logging.ERROR, logging.FileHandler(filename=f'{LOG_DIR}/error.log')),
 ]
+
+# API application build + resource endpoints
+app = flask.Flask(__name__)
+api = flask_restful.Api(app)
+
+# Enable cross origin resource request
+CORS(app)
+
+# Add various endpoint resources
+api.add_resource(RootEndpoint, '/')
+api.add_resource(BareUserEndpoint, '/user')
+api.add_resource(UserEndpoint, '/user/<username>')
 
 
 def init_logging(log_name: str) -> logging.Logger:

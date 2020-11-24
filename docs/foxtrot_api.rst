@@ -9,17 +9,6 @@ Subpackages
 
    foxtrot_api.endpoints
 
-Submodules
-----------
-
-foxtrot\_api.logger module
---------------------------
-
-.. automodule:: foxtrot_api.logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

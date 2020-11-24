@@ -1,6 +1,6 @@
 runtime: python38
 
-entrypoint: gunicorn --workers 2 --bind :8080 foxtrot_api:app
+entrypoint: gunicorn --workers 2 --bind :8080 foxtrot_api.__main__:app
 
 handlers:
 - url: /.*
