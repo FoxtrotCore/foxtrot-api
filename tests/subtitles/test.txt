@@ -1,0 +1,388 @@
+# Exported by Aegisub 3.2.2
+KARAOKE: ♪ Here we are going far ♪
+KARAOKE: ♪ to save all that we love ♪
+KARAOKE: ♪ If we give all we’ve got ♪
+KARAOKE: ♪ we will make it through ♪
+KARAOKE: ♪ Here we are like a star ♪
+KARAOKE: ♪ shining bright\Non your world today ♪
+KARAOKE: ♪ Make evil go away ♪
+KARAOKE: ♪ Code Lyoko we’ll\Nwithstand it all ♪
+KARAOKE: ♪ Code Lyoko be there\Nwhen you call ♪
+KARAOKE: ♪ Code Lyoko we\Nwill stand real tall ♪
+KARAOKE: ♪ Code Lyoko\Nstronger after all ♪
+MILLY: Okay. Are we rolling?
+TAMIYA: Yeah, but we’re upside down!
+MILLY: Hello, fellow students\Nof Kadic Junior High!
+MILLY: Your ace reporters\NMilly and Tamiya are here
+MILLY: to bring you an exclusive\Nfor today’s school news,
+MILLY: and it’s really big
+MILLY: since as I’m pretty sure\Nyou already know
+MILLY: tonight is the big night.
+MILLY: The night of our\Nannual school prom.
+MILLY: Unfortunately, our cameras\Nweren’t authorized
+MILLY: to film the site where\Nthe festivities will take place,
+MILLY: but I can make out\Nfrom where I’m speaking
+MILLY: the girl who might be crowned\Nour beauty queen tonight,
+MILLY: just as she was last year,\NI’m mean, of course,
+MILLY: our principal’s daughter, Sissi.
+MILLY: Let’s see whether she’ll answer\Na few questions.
+MILLY: Well, Sissi?
+MILLY: How about a few words\Nfor our TV audience
+MILLY: before the big night?
+SISSI: Sorry, munchkins.
+SISSI: I only talk to real pro reporters.
+SISSI: I have no time to waste\Non a couple of nerds!
+MILLY: But it’s for the school\Nnews program!
+MILLY: What about freedom of the press!
+SISSI: Oh, Milly.\NLittle dipsticks your age
+SISSI: don’t have any freedom,\Nunderstand?
+SISSI: Anyway, who needs\Nyour dumb reporting?
+SISSI: What do you know?
+SISSI: Besides, you’ve got a problem.
+SISSI: Don’t forget you have to have a date,
+SISSI: and I don’t know anyone\Nwho’d want to go with a jerk like you.
+SISSI: Even them.
+SISSI: I’ll bet if you ask them,\Nthey’d run like scared rabbits.
+MILLY: Who needs them!\NThere are lots of other boys!
+SISSI: Oh, yeah? What are you\Nwaiting for, then?
+SISSI: Try and find one!
+MILLY: Uh, uh, Ulrich, would you…
+MILLY: would you be my date tonight?
+ULRICH: Uh…I’m sorry, Milly.
+ULRICH: It wouldn’t be a very good idea.
+ULRICH: I’m too old for you.
+ULRICH: And uh, well,
+ULRICH: you see, I promised to go with Yumi.
+SISSI: You see?
+SISSI: What did I tell you?
+SISSI: But don’t worry, Milly.
+SISSI: I’m sure you’ll find a boy\Nfor the sandbox dance.
+SISSI: Meanwhile, why don’t you\Ngo play with your dolls?
+TAMIYA: Milly!
+TAMIYA: Milly, wait!
+YUMI: I hope you’re proud of yourself.
+JEREMIE: Aelita?\NThis is Jeremie.
+JEREMIE: Do you read me?
+JEREMIE: Aelita?
+AELITA: Hi! How are you?
+JEREMIE: I’m fine. How about you?
+AELITA: Okay.
+AELITA: I didn’t see anything unusual\Naround the towers.
+AELITA: It all seems quiet.
+AELITA: Well, for the moment.
+JEREMIE: You know, I’m making progress\Nwith my research,
+JEREMIE: so…so you can\Ncome and live with us.
+AELITA: The key to materialization?
+AELITA: You’ve found it at last!
+JEREMIE: Uh…well, no.
+JEREMIE: Not yet,\Nbut I’m working on it.
+JEREMIE: It’s just a matter of time.
+JEREMIE: Then XANA won’t be able to\Ndo anything to harm you or us.
+AELITA: That’s great! Thanks.
+TAMIYA: Milly, don’t cry.
+TAMIYA: We’ll go to the prom.\NYou’ll see.
+TAMIYA: As for the news,\NJim said it was okay.
+TAMIYA: We have until 9 o’clock.
+MILLY: Oh, it’s a waste of time.
+MILLY: Better face facts, Tamiya.
+MILLY: They don’t care about us\Nor the newscast.
+MILLY: Oh, I hate them.\NAll of them.
+MILLY: I hate every single\None of them.
+MILLY: I hate everybody\Nin the world.
+TAMIYA: You don’t know what you’re saying.\NIt’s just that--
+MILLY: Oh, stop it! I’m sick of you, too,\Nso just leave me alone!
+TAMIYA: Hey!
+TAMIYA: It’s true Ulrich could’ve been a little nicer.
+YUMI: Don’t look so gloomy, Ulrich.
+YUMI: Is it because of Milly?
+YUMI: You could’ve said yes.
+YUMI: You know, me and the prom.
+ODD: Even if I was your date?
+ULRICH: Sissi really did come on strong.
+ULRICH: If meanness is one of the\Nqualities of a beauty queen,
+ULRICH: she’ll get re-elected, alright.
+JEREMIE: That’s true, but try to get\NMiss World to see that.
+ODD: Ha-ha! Miss World, huh?
+ODD: Miss In Her Own World\Nis more like it!
+MILLY: At least you don’t\Ncare how old I am, do you?
+MILLY: We understand each other.
+MILLY: We’re not like those dumb older kids\Nwho always want to run things.
+MILLY: They think that because we’re young,\Nwe don’t count at all.
+MILLY: If for once we were older,\Na lot older than them,
+MILLY: they wouldn’t laugh at us, would they?
+TAMIYA: Milly?
+TAMIYA: Are you in there?
+TAMIYA: Are you finished sulking?
+TAMIYA: Hurry, we have work to do!
+MILLY: Okay, okay. I’m coming!
+MILLY: You stay right there.
+MILLY: I’ll be back for you.
+TAMIYA: We have a report to finish\Non the prom, remember?
+MUSIC: (SINISTER MUSIC)
+SFX: (GROWLING)
+SISSI: Hey, I hope you two aren’t gonna\Nfollow me around all day long.
+SISSI: As far as I know,\Nyou’re not beauticians,
+SISSI: so stop sticking to me like glue!
+SISSI: I don’t need you, understand? So scat!
+HERB: Uh…Sissi…\Nw-we thought--
+SISSI: Take this advice.
+SISSI: Don’t think--\Nit doesn’t suit you!
+DEFAULT: -Oh.\N-Oh.
+SISSI: A bunch of babies at our prom.
+SISSI: They’ve gotta be kidding.
+SISSI: And that other freak who had\Nthe nerve to invite Ulrich!
+SISSI: Can’t believe it!
+SISSI: If anybody’s going out with Ulrich,\Nit absolutely has to be me.
+SISSI: I am the star--\Nthe diva of the school!
+SFX: (CREAKING)
+SISSI: Huh?
+: (PULSING)
+: (PULSING)
+SISSI: Who’s there?
+SISSI: Answer me! Who is it!
+SISSI: (SCREAMS)
+MR. DELMAS: Move along. Back to your dorms.\NEverything is just fine.
+MILLY: Looks as if we’ve\Ngot ourselves a super scoop.
+ODD: What do you say we take a look\Nto make sure that our old friend XANA
+ODD: isn’t behind this?
+YUMI: Mhmm.
+ULRICH: What do you think?
+JEREMIE: A simple short circuit.
+JEREMIE: Too many appliances\Nplugged in at the same time.
+YUMI: Yeah, the hi-fi, lights,\Nlady shaver, curling iron…
+YUMI: all together, what do you\Nexpect to happen?
+ODD: Not to mention\Nthe brain stimulator!
+ODD: Although she probably never\Nfigured out how to use it.
+JEREMIE: Hmm.
+MILLY: I don’t know what happened,\Nbut if you ask me, Sissi had it coming.
+TAMIYA: I couldn’tagree with you more.
+MILLY: Oh, no!
+MILLY: My teddy bear’s gone!
+JIM: Aha!
+JIM: Caught you!
+JIM: It’s forbidden to play\Nin the garden shed!
+MILLY: Wait a minute, Jim!\NIt was my--
+JIM: I don’t want to know why.
+JIM: I’ve told you a hundred times that this place\Nis much too dangerous for children.
+JIM: Look at all these rusty tools!
+JIM: What do you think this is,\Na kid’s playground?
+MILLY: We know, but--
+JIM: No buts, huh!
+JIM: Now, I hope I’ve\Nmade myself real clear.
+JIM: Entry forbidden.\NAccess reserved for adults.
+MILLY: With you, everything is off-limits!
+JIM: Now, you listen here, huh.
+JIM: I would change the way I talk\Nif I were you, little girl.
+MILLY: Little girl!
+MILLY: Okay, I’m young, so what!
+MILLY: It’s only big kids who can\Nsay what they think, huh?
+JIM: Ah, so you think\Nyou’re real big kids?
+JIM: Okay, that’s fine.
+JIM: News report or not,
+: the two of you are grounded\Nfor tonight in your room.
+TAMIYA: Oh great, Milly.\NReally great.
+TAMIYA: Thanks to you,\Nit’s goodbye prom.
+JIM: Now, beat it!
+TAMIYA: Oh, look at the pictures we’ve taked.
+TAMIYA: They’re really fantastic.
+ODD: Something wrong, Milly?
+TAMIYA: Somebody stole our teddy bear.
+MILLY: And I’m sure it’s one of\Nthe big kids who did it for spite.
+TAMIYA: Milly, you’re right! Look at this!\NIt’s a picture of Sissi’s room.
+MILLY: And there’s my teddy bear!\NHidden under her pillow! Incredible.
+ODD: Ah, who would’ve believed it?\NSoon, she’ll be playing with dolls!
+MILLY: Okay! Come on, now!\NWe gotta find her!
+TAMIYA: If Jim catches us in the dorm,\Nwe’re in big trouble, Milly.
+ODD: You go back to your room.\NI’ll handle this.
+SFX: (RUSTLING)
+JIM: What’s going on now?
+JIM: Who’s there?
+JIM: Come on out!
+JIM: D--aah!
+JIM: Y-You’d better watch out!\NI-I’m a black belt!
+SFX: (GROWLING)
+JIM: A-a-a-a-ah!
+MR. DELMAS: And now you’re sure, Jim,\Nthat this is your attacker?
+MR. DELMAS: And you say he’s\Nan expert in martial arts?
+MR. DELMAS: I think it would be better\Nnot to call the police. Right, Jim?
+JEREMIE: What happened to Sissi, it was…
+JEREMIE: it was kind of weird, don’t you think?
+ULRICH: It was a short circuit.\NA simple short circuit.
+ULRICH: What else could it be?
+JEREMIE: I’m not so sure, and you know\Njust what I mean.
+YUMI: Anyway, let’s play it real cool.\NWalls have ears, you know.
+YUMI: Well, I’ve got to go now\Nand get ready for the prom tonight.
+YUMI: Sometimes, being a day student\Ncan be a total drag.
+ULRICH: Don’t complain.
+ULRICH: No one wakes you at 6 AM,\Nyou have hot water,
+ULRICH: and you don’t have to sleep\Nnext to smelly Odd.
+YUMI: See you later.
+MR. DELMAS: Odd, are you looking for something?
+ODD: Oh, uh, no.
+ODD: You see, I just heard about\Nwhat happened to Jim.
+ODD: Do they know who attacked him?
+MR. DELMAS: Uh, no.
+MR. DELMAS: For now, I think our gym teacher\Ncould use some rest.
+ODD: (GASPS)
+ULRICH: XANA? In a teddy bear?
+ODD: Yeah, I’m pretty sure.
+JEREMIE: He’s always there\Nwhen you least expect him.
+ODD: Okay, guys.
+ODD: Who goes and who stays here?
+JEREMIE: We can’t have a solo mission.\NIt’s too dangerous without Yumi.
+JEREMIE: If you go alone, you never know\Nwhat you’re gonna find over there.
+ODD: I volunteer!
+JEREMIE: What did I just say, huh?
+ODD: Well, have you got any other ideas?
+ODD: There have been two accidents,\Nwe can’t leave the school unguarded,
+ODD: and even going back in time\Nif there’s an accident, it’s all over.
+ULRICH: Odd is right.
+ULRICH: You go and I’ll stay.
+ULRICH: If I find any clues,\NI’ll pass them on to you.
+ULRICH: Go on and say hi\Nto you know who for me.
+JEREMIE: Aelita?
+JEREMIE: Aelita? Aelita, it’s Jeremie.
+JEREMIE: Do you read me?
+AELITA: Hi there.
+JEREMIE: We think that XANA\Nhas launched an attack.
+JEREMIE: Have you noticed anything?
+AELITA: No, nothing.
+AELITA: But we can take a closer look.
+JEREMIE: Aelita, I’m sending Odd.
+JEREMIE: He’s coming over solo.
+JEREMIE: Ulrich has to say behind
+JEREMIE: to watch for any virus action at school.
+JEREMIE: Odd looks ready to go.
+JEREMIE: How are things with you, Ulrich?
+ULRICH: It looks like we have a problem.
+ULRICH: A big one.
+JEREMIE: Transfer Odd.
+JEREMIE: Scanner.
+JEREMIE: Virtualization.
+ULRICH: Jeremie, it’s bad, huh.
+ULRICH: The bear got out of the school.
+AELITA: If it’s under XANA’s control,\Nit’ll only become much madder.
+AELITA: It’ll go for anybody that’s around.
+AELITA: Especially his mortal enemies. Like you.
+JEREMIE: Huh!
+ULRICH: Oh, Yumi!
+AELITA: You see that?
+AELITA: The tower that XANA has activated\Ncan’t be too far away.
+ODD: Well, uh, not down there, anyway.
+AELITA: Maybe on the neighboring plateaus.
+ODD: Oops.
+ODD: Too late.
+ODD: Here come the reception committee.
+JEREMIE: Odd, take good care of Aelita.
+SFX: (DIAL TONE)
+ULRICH: Answer, will you! Answer!
+SFX: (CELL PHONE RINGS)
+JEREMIE: Odd, what’s going on?
+ODD: Laser arrows!
+ODD: Aaah!
+JEREMIE: Odd, you just lost\Nanother 10 life points!
+ODD: No kidding!
+AELITA: Odd, I’m afraid we haven’t any choice.
+SFX: (DOORBELL RINGS)
+YUMI: Ulrich! Watch it, will you?
+ULRICH: Sorry. Are your parents home?
+YUMI: No, they went out.
+ULRICH: Okay. Come on, we can’t stay here.
+YUMI: Hey, would you mind explaining?
+ULRICH: Uh, we don’t have time.
+ULRICH: Come on!
+JEREMIE: Odd, be careful.
+JEREMIE: You only have 50 life points left.
+ODD: Laser arrows!
+AELITA: (SCREAMS)
+ODD: We can’t leave you alone\Nfor one second, huh?
+AELITA: Odd! I think I found something.
+WOMAN: Oh, no!
+YUMI: That way!
+ULRICH YUMI: (BOTH SCREAM)
+ULRICH: Jeremie, it’s Ulrich.
+ULRICH: Yumi’s with me.
+ULRICH: We’re coming back to the school\Nto evacuate everyone.
+ULRICH: Tell Odd to move it.\NIt’s getting rough around here.
+JEREMIE: Odd, hurry up.\NTeddy’s getting real angry.
+ODD: Okay, okay.
+AELITA: The tower can’t be too far away.
+AELITA: Let’s see now.
+ODD: Uh-oh.
+ODD: Oh, no.
+ODD: Houston, we’ve got a problem.
+YUMI: Odd still hasn’t found the activated tower.
+ULRICH: You go and clear the dorms.\NI’ll take care of the gym.
+ODD: We found the tower, Jeremie.
+JEREMIE: Great, well done!\NNow all you have to do is deactivate it.
+ODD: Okay.
+ODD: Just give me a minute to say hello\Nto an old buddy of mine.
+JEREMIE: Cut the courtesy!
+JEREMIE: You only have 50 life points left.\NYou can’t let him hit you!
+JIM: Hey, Ulrich.
+JIM: You could’ve made a little effort.\NI don’t believe how sloppy you look!
+JIM: Well, I’ll let it go this time.\NPut it down to the company you keep.
+JIM: Try to chill out and have fun.\NYou look like you’re expecting a disaster.
+SISSI: Ulrich! How are you?\NHey, where did your date go?
+SISSI: Next time, just call me.
+MR. DELMAS: And now the moment\Nyou’ve all been waiting for!
+MR. DELMAS: The election of this year’s\Nbeauty queen! So, get ready!
+DEFAULT: (CHEERS AND APPLAUSE)
+SISSI: Gotta run now!\NIt’s my moment of triumph!
+ODD: Now, that’s what I call\Na really warm welcome.
+ODD: Aaah! Aaah!
+AELITA: Jeremie, Odd’s not gonna\Nmake it on his own!
+JEREMIE: Yes, he will!
+JEREMIE: Odd! Go on, you have to hit the target!
+MR. DELMAS: And now, everyone, this year, once again,\Nit’s time to elect the young lady
+MR. DELMAS: who in your view combines\Nmore than any other girl,
+MR. DELMAS: charm, grace, beauty, and elegance!
+MR. DELMAS: And here is our first candidate!
+ULRICH: Stop!
+ULRICH: Listen to what I have to say.
+ULRICH: You have all got to get out of here!
+ULRICH: We have to evacuate the gym.
+ULRICH: Now, keep calm…
+ULRICH: I'm not joking. This is serious.
+ULRICH: We are about to be attacked\Nby a gigantic teddy bear.
+SFX: (LAUGHTER)
+JIM: Ha! I knew it!
+JIM: I saw it, too!
+JIM: I saw the giant teddy bear, too!
+SISSI: Quiet, quiet!
+SISSI: Shut up, all of you!\NYou bunch of idiots!
+SISSI: Can’t you see what he’s trying to do?
+SISSI: It’s a trick, I tell you!
+SISSI: A trick to keep me from\Nwinning again this year!
+SISSI: A gigantic teddy bear. Come on.\NWhy not King Kong while you’re at it?
+SFX: (SCREAMING)
+JEREMIE: Odd, it’s now or never.
+ODD: Aaah!
+ODD: Impact!
+JEREMIE: Go on, Aelita. It’s up to you.
+YUMI: Ulrich!
+YUMI: Ulrich! Are you okay?
+ULRICH: Yeah, sure.
+ULRICH: Ready for a trip into the past, Yumi?
+MILLY: Ulrich, would you, uh…
+MILLY: would you…\Nwould you be my date?
+ULRICH: I’d be glad to, Milly.
+ULRICH: I’ll see you here at eight.
+MILLY: Really?
+ULRICH: Why, sure.
+ULRICH: You’re not too mad at me,\Nare you, Yumi?
+YUMI: Not at all.
+YUMI: Anyway, my secret admirer\Nwill take me tonight.
+YUMI: Right, Odd?
+SISSI: What!?
+SISSI: But, Ulrich, you’re gonna…
+SISSI: go with that…that silly baby?!
+ULRICH: That’s right, I sure am.
+ULRICH: But don’t worry.
+ULRICH: When your brain gets\Nanother neuron to two,
+ULRICH: maybe I’ll go out with you, too.
+MILLY: You are recording, Tamiya, I hope.
+TAMIYA: You bet I am!
+TAMIYA: This is a scoop!
+MILLY: A super scoop!
+ADVERT: CLOSED CAPTIONING PROVIDED BY\NREDDIT.COM/R/CODELYOKO

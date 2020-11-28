@@ -24,6 +24,7 @@ setuptools.setup(
     ],
     install_requires=[
         'gunicorn',
+        'ass',
         'Flask',
         'Flask-RESTful',
         'Flask-Cors'
