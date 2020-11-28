@@ -36,6 +36,38 @@ def test_episode_construction():
     assert str(episode) == '<Episode 121: Zero Gravity Zone (0 episodes)>'
 
 
+def test_episode_to_dict():
+    """
+    Given a set of valid episode and line info
+    When constructing an episode with the data set: {
+        production_code: 121,
+        title: 'Zero Gravity Zone',
+        lines: [ { production_code: 121,
+                   start: dt.time(1),
+                   end: dt.time(2),
+                   character: 'Yumi',
+                   dialogue: 'Some text.' } ],
+    }
+    Then it should produce a matching dict representation
+    """
+    line = Line(121, dt.time(1), dt.time(2), 'Yumi', 'Some text.')
+    episode = Episode(121, 'Zero Gravity Zone')
+    episode.add_line(line)
+    assert episode.__dict__() == {
+        'production_code': 121,
+        'title': 'Zero Gravity Zone',
+        'lines': [{
+            'production_code': 121,
+            'timestamp': {
+                'start': dt.time(1).strftime('%H:%M:%S'),
+                'end': dt.time(2).strftime('%H:%M:%S')
+            },
+            'character': 'YUMI',
+            'dialogue': 'Some text.'
+        }]
+    }
+
+
 def test_episode_production_code_valid():
     """
     Given an episode with the production code: 121

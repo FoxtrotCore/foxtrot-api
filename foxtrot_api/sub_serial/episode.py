@@ -165,3 +165,17 @@ class Episode:
         """
         return f'<Episode {self.__production_code}: {self.__title}' \
                f' ({len(self.__lines)} episodes)>'
+
+    def __dict__(self: Line) -> dict:
+        """
+        Returns a dicttionary representation of the episode.
+
+        Returns
+        -------
+        `dict`: The dictionary representation
+        """
+        return {
+            'production_code': self.__production_code,
+            'title': self.__title,
+            'lines': list(map(lambda x: x.__dict__(), self.__lines.values()))
+        }
