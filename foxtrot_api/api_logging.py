@@ -2,7 +2,7 @@ import logging
 import flask
 from foxtrot_api import LOG_DIR, LOG_FORMAT
 
-LOG_HANDLERS = [
+__LOG_HANDLERS = [
     (logging.INFO, logging.FileHandler(filename=f'{LOG_DIR}/info.log')),
     (logging.WARN, logging.FileHandler(filename=f'{LOG_DIR}/warn.log')),
     (logging.DEBUG, logging.FileHandler(filename=f'{LOG_DIR}/debug.log')),
@@ -11,7 +11,7 @@ LOG_HANDLERS = [
 
 
 def init_logging(log_name: str, app: flask.Flask) -> flask.Flask:
-    for level, handler in LOG_HANDLERS:
+    for level, handler in __LOG_HANDLERS:
         handler.setLevel(level)
         handler.setFormatter(LOG_FORMAT)
         app.logger.addHandler(handler)
