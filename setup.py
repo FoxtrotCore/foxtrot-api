@@ -41,7 +41,7 @@ setuptools.setup(
     python_requires='>=3.8.5',
     entry_points={
         'console_scripts': [
-            '{} = foxtrot_api.__main__:main'.format(fa.APP_NAME),
+            f'{fa.APP_NAME} = foxtrot_api.__main__:main',
         ]
     }
 )
