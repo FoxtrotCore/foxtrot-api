@@ -31,7 +31,6 @@ def test_line_to_dict():
         character: 'Yumi',
         dialogue: 'Some text.'
     }
-    and converting it to a string
     Then it should produce a matching dict representation
     """
     line = Line(121, dt.time(1), dt.time(2), 'Yumi', 'Some text.')
